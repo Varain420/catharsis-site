@@ -1202,7 +1202,7 @@
 class Component extends DCLogic {
   state = {
     page: 'home',
-    lang: (typeof window !== 'undefined' && window.localStorage && localStorage.getItem('catharsis_lang')) || ((typeof navigator !== 'undefined' && /^en/i.test(navigator.language || '')) ? 'en' : 'ro'),
+    lang: (typeof window !== 'undefined' && window.localStorage && localStorage.getItem('catharsis_lang')) || 'ro',
     w: (typeof window !== 'undefined' ? window.innerWidth : 1280),
     form: { nume: '', telefon: '', serviciu: '', medic: '', zi: '', interval: '', mesaj: '' },
     sent: false,
