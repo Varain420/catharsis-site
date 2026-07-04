@@ -1,0 +1,9 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=$HOME/public_html
+    - /bin/mkdir -p $DEPLOYPATH/assets
+    - /bin/cp index.html $DEPLOYPATH/
+    - /bin/cp favicon.svg $DEPLOYPATH/
+    - /bin/cp robots.txt $DEPLOYPATH/
+    - /bin/cp -R assets/. $DEPLOYPATH/assets/
