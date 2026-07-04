@@ -1049,6 +1049,7 @@
               <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold,#c9a24b);margin-bottom:8px">{{ t.lblMesaj }}</div>
               <textarea value="{{ fMesaj }}" onchange="{{ onMesaj }}" maxlength="1000" rows="4" placeholder="{{ t.phMesaj }}" style="width:100%;padding:14px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(201,162,75,.3);border-radius:2px;color:#f0e5cc;font-size:15px;outline:none;resize:vertical;line-height:1.6" style-focus="border-color:var(--gold,#c9a24b)"></textarea>
             </div>
+            <input value="{{ fHp }}" onchange="{{ onHp }}" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
             <div onclick="{{ toggleGdpr }}" style="display:flex;align-items:flex-start;gap:11px;cursor:pointer">
               <div style="{{ gdprBox }}">{{ gdprCheck }}</div>
               <div style="font-size:12.5px;line-height:1.55;color:rgba(232,223,200,.66)">{{ t.gdpr }}<span style="color:var(--gold,#c9a24b)"> *</span></div>
@@ -1062,8 +1063,8 @@
           <div style="text-align:center;padding:50px 26px;border:1px solid rgba(201,162,75,.35);background:linear-gradient(180deg,rgba(20,57,42,.5),transparent);animation:fadeUp .5s ease">
             <div style="width:60px;height:60px;margin:0 auto 22px;border:1px solid var(--gold,#c9a24b);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gold,#c9a24b);font-size:26px">✓</div>
             <h3 style="font-family:'Cinzel',serif;font-size:24px;color:#f0e5cc;margin:0 0 12px;letter-spacing:.03em">{{ t.thanksTitle }}</h3>
-            <p style="font-size:15px;line-height:1.75;color:rgba(232,223,200,.8);margin:0 0 6px;max-width:360px;margin-left:auto;margin-right:auto">{{ t.thanksText }}</p>
-            <p style="font-size:13.5px;line-height:1.7;color:rgba(232,223,200,.62);margin:0 0 22px;max-width:360px;margin-left:auto;margin-right:auto">{{ t.thanksSend }}</p>
+            <p style="font-size:15px;line-height:1.75;color:rgba(232,223,200,.8);margin:0 0 6px;max-width:360px;margin-left:auto;margin-right:auto">{{ thanksTextDyn }}</p>
+            <p style="font-size:13.5px;line-height:1.7;color:rgba(232,223,200,.62);margin:0 0 22px;max-width:360px;margin-left:auto;margin-right:auto">{{ thanksSendDyn }}</p>
             <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:22px">
               <a href="{{ bookingGmail }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:13px 24px;background:linear-gradient(180deg,#e6c67a,#c9a24b);color:#0a2118;font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;border-radius:2px;text-decoration:none" style-hover="filter:brightness(1.07)">✉ {{ t.sendGmail }}</a>
               <a href="{{ bookingMailto }}" style="display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border:1px solid rgba(201,162,75,.5);color:var(--gold,#c9a24b);font-size:12px;letter-spacing:.1em;text-transform:uppercase;border-radius:2px;text-decoration:none" style-hover="background:rgba(201,162,75,.08)">{{ t.sendEmail }}</a>
@@ -1239,6 +1240,9 @@ class Component extends DCLogic {
     w: (typeof window !== 'undefined' ? window.innerWidth : 1280),
     form: { nume: '', telefon: '', serviciu: '', medic: '', zi: '', interval: '', mesaj: '' },
     sent: false,
+    sentServer: false,
+    hp: '',
+    bootTs: (typeof Date !== 'undefined' ? Date.now() : 0),
     gdpr: false,
     err: '',
     crisisOpen: !(typeof window !== 'undefined' && window.localStorage && localStorage.getItem('catharsis_crisis_dismissed')),
@@ -1328,7 +1332,7 @@ class Component extends DCLogic {
   }
 
   go(p) {
-    this.setState(p === 'booking' ? { page: p, articleIdx: null, sent: false, err: '' } : { page: p, articleIdx: null });
+    this.setState(p === 'booking' ? { page: p, articleIdx: null, sent: false, sentServer: false, err: '' } : { page: p, articleIdx: null });
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' });
   }
   setField(k, v) { this.setState(s => ({ form: { ...s.form, [k]: v } })); }
@@ -1364,7 +1368,7 @@ class Component extends DCLogic {
         tarifNote: 'Tarifele se comunică la programare, în funcție de tipul și durata serviciului. Pentru detalii, contactează-ne telefonic.', servBtn: 'Programează o ședință',
         blogEyebrow: 'Blog', blogTitle: 'Articole & resurse', blogSub: 'Perspective despre sănătatea minții, scrise de specialiștii clinicii.', readMore: 'Citește →', backToArticles: '← Înapoi la articole', articleCta: 'Ai nevoie de sprijin? Suntem aici pentru tine.', articleCtaBtn: 'Programează o consultație',
         bookEyebrow: 'Programări', bookTitle: 'Fă o programare', bookSub: 'Completează formularul și te contactăm în cel mai scurt timp. Totul rămâne strict confidențial.',
-        lblNume: 'Nume și prenume', phNume: 'Numele tău', lblTel: 'Telefon', lblServ: 'Serviciu dorit', servPlaceholder: 'Alege un serviciu…', lblMedic: 'Medic / psiholog preferat', medicNone: 'Fără preferință', lblZi: 'Zi preferată', lblInterval: 'Interval orar', intervalAny: 'Oricând', lblMesaj: 'Mesaj (opțional)', phMesaj: 'Spune-ne pe scurt cu ce te putem ajuta', submitBtn: 'Trimite solicitarea', consent: 'Prin trimiterea formularului ești de acord să fii contactat(ă) pentru stabilirea programării.', thanksTitle: 'Îți mulțumim!', thanksText: 'Aproape gata — mai e un singur pas.', thanksSend: 'Trimite-ne detaliile printr-un singur click:', sendGmail: 'Trimite prin Gmail', sendEmail: 'Aplicația de email', addCalendar: 'Adaugă în Google Calendar', sendAnother: 'Completează din nou', contactData: 'Date de contact', programLbl: 'Program',
+        lblNume: 'Nume și prenume', phNume: 'Numele tău', lblTel: 'Telefon', lblServ: 'Serviciu dorit', servPlaceholder: 'Alege un serviciu…', lblMedic: 'Medic / psiholog preferat', medicNone: 'Fără preferință', lblZi: 'Zi preferată', lblInterval: 'Interval orar', intervalAny: 'Oricând', lblMesaj: 'Mesaj (opțional)', phMesaj: 'Spune-ne pe scurt cu ce te putem ajuta', submitBtn: 'Trimite solicitarea', consent: 'Prin trimiterea formularului ești de acord să fii contactat(ă) pentru stabilirea programării.', thanksTitle: 'Îți mulțumim!', thanksText: 'Aproape gata — mai e un singur pas.', thanksTextOk: 'Cererea ta a fost trimisă cabinetului. Te contactăm în cel mai scurt timp pentru confirmare.', thanksSendOk: 'Opțional, ne poți trimite detaliile și pe email sau îți poți adăuga programarea în calendar:', thanksSend: 'Trimite-ne detaliile printr-un singur click:', sendGmail: 'Trimite prin Gmail', sendEmail: 'Aplicația de email', addCalendar: 'Adaugă în Google Calendar', sendAnother: 'Completează din nou', contactData: 'Date de contact', programLbl: 'Program',
         contactEyebrow: 'Contact', contactTitle: 'Ne găsești aici', contactSub: 'VOX Center, în inima Galațiului. Te așteptăm într-un cadru discret și primitor.', programTitle: 'Program de lucru', bookOnline: 'Programează online',
         modalFormare: 'Formare', modalExpertiza: 'Arii de expertiză', modalBookWith: 'Programează cu', gdpr: 'Sunt de acord cu prelucrarea datelor mele conform Politicii de confidențialitate.', crisis: 'Ești în criză? Sună la 112 sau la TelVerde 0800 801 200 (gratuit, 24/7).', errRequired: 'Completează numele și telefonul.', errPhone: 'Introdu un număr de telefon mobil valid (ex.: 07xx xxx xxx).', errGdpr: 'Bifează acordul de confidențialitate.',
         callTitle: 'Sună acum', waTitle: 'Scrie-ne pe WhatsApp',
@@ -1468,7 +1472,7 @@ class Component extends DCLogic {
         tarifNote: 'Fees are communicated at booking, depending on the type and duration of the service. For details, please contact us by phone.', servBtn: 'Book a session',
         blogEyebrow: 'Blog', blogTitle: 'Articles & resources', blogSub: 'Perspectives on mental health, written by the clinic\u2019s specialists.', readMore: 'Read more →', backToArticles: '← Back to articles', articleCta: 'Do you need support? We are here for you.', articleCtaBtn: 'Book a consultation',
         bookEyebrow: 'Appointments', bookTitle: 'Make an appointment', bookSub: 'Fill in the form and we will contact you as soon as possible. Everything remains strictly confidential.',
-        lblNume: 'Full name', phNume: 'Your name', lblTel: 'Phone', lblServ: 'Desired service', servPlaceholder: 'Choose a service…', lblMedic: 'Preferred doctor / psychologist', medicNone: 'No preference', lblZi: 'Preferred day', lblInterval: 'Time slot', intervalAny: 'Anytime', lblMesaj: 'Message (optional)', phMesaj: 'Tell us briefly how we can help', submitBtn: 'Send request', consent: 'By submitting this form you agree to be contacted to arrange the appointment.', thanksTitle: 'Thank you!', thanksText: 'Almost done — just one more step.', thanksSend: 'Send us the details with a single click:', sendGmail: 'Send via Gmail', sendEmail: 'Email app', addCalendar: 'Add to Google Calendar', sendAnother: 'Fill in again', contactData: 'Contact details', programLbl: 'Hours',
+        lblNume: 'Full name', phNume: 'Your name', lblTel: 'Phone', lblServ: 'Desired service', servPlaceholder: 'Choose a service…', lblMedic: 'Preferred doctor / psychologist', medicNone: 'No preference', lblZi: 'Preferred day', lblInterval: 'Time slot', intervalAny: 'Anytime', lblMesaj: 'Message (optional)', phMesaj: 'Tell us briefly how we can help', submitBtn: 'Send request', consent: 'By submitting this form you agree to be contacted to arrange the appointment.', thanksTitle: 'Thank you!', thanksText: 'Almost done — just one more step.', thanksTextOk: 'Your request has been sent to the clinic. We will contact you shortly to confirm.', thanksSendOk: 'Optionally, you can also email us the details or add the appointment to your calendar:', thanksSend: 'Send us the details with a single click:', sendGmail: 'Send via Gmail', sendEmail: 'Email app', addCalendar: 'Add to Google Calendar', sendAnother: 'Fill in again', contactData: 'Contact details', programLbl: 'Hours',
         contactEyebrow: 'Contact', contactTitle: 'Find us here', contactSub: 'VOX Center, in the heart of Galați. We welcome you in a discreet and warm setting.', programTitle: 'Working hours', bookOnline: 'Book online',
         modalFormare: 'Training', modalExpertiza: 'Areas of expertise', modalBookWith: 'Book with', gdpr: 'I agree to the processing of my data in line with the Privacy Policy.', crisis: 'In crisis? Call 112 or the free TelVerde helpline 0800 801 200 (24/7).', errRequired: 'Please fill in your name and phone.', errPhone: 'Please enter a valid mobile number (e.g. 07xx xxx xxx).', errGdpr: 'Please accept the privacy terms.',
         callTitle: 'Call now', waTitle: 'Message us on WhatsApp',
@@ -1725,14 +1729,17 @@ class Component extends DCLogic {
         if (!fm.nume.trim() || !fm.telefon.trim()) { this.setState({ err: 'required' }); return; }
         const ph = fm.telefon.replace(/[^0-9+]/g, ''); if (!/^(\+40|0040|0)7\d{8}$/.test(ph)) { this.setState({ err: 'phone' }); return; }
         if (!this.state.gdpr) { this.setState({ err: 'gdpr' }); return; }
-        var endpoint = 'https://formspree.io/f/YOUR_FORM_ID';
-        if (endpoint.indexOf('YOUR_FORM_ID') === -1) {
-          try { fetch(endpoint, { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign({ _subject: 'Solicitare programare Catharsis \u2014 ' + fm.nume }, fm)) }); } catch (e) {}
-        }
-        this.setState({ sent: true, err: '' });
+        const payload = Object.assign({}, fm, { website: this.state.hp || '', elapsed: Date.now() - (this.state.bootTs || 0), lang: this.state.lang });
+        fetch('send-booking.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+          .then(r => (r.ok ? r.json() : Promise.reject(new Error('http'))))
+          .then(j => this.setState({ sent: true, sentServer: !!(j && j.ok), err: '' }))
+          .catch(() => this.setState({ sent: true, sentServer: false, err: '' }));
       },
-      resetForm: () => this.setState({ sent: false, err: '', gdpr: false, form: { nume: '', telefon: '', serviciu: '', medic: '', zi: '', interval: '', mesaj: '' } }),
+      resetForm: () => this.setState({ sent: false, sentServer: false, hp: '', err: '', gdpr: false, form: { nume: '', telefon: '', serviciu: '', medic: '', zi: '', interval: '', mesaj: '' } }),
       sent: this.state.sent, notSent: !this.state.sent,
+      fHp: this.state.hp, onHp: (e) => this.setState({ hp: e.target.value }),
+      thanksTextDyn: this.state.sentServer ? t.thanksTextOk : t.thanksText,
+      thanksSendDyn: this.state.sentServer ? t.thanksSendOk : t.thanksSend,
       bookingMailto, bookingGmail, bookingCalendar, hasDate: !!f.zi,
       gdpr: this.state.gdpr,
       toggleGdpr: () => this.setState(s => ({ gdpr: !s.gdpr, err: s.err === 'gdpr' ? '' : s.err })),

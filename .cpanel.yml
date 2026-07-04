@@ -6,4 +6,5 @@ deployment:
     - /bin/cp index.html $DEPLOYPATH/
     - /bin/cp favicon.svg $DEPLOYPATH/
     - /bin/cp robots.txt $DEPLOYPATH/
+    - /bin/cp send-booking.php $DEPLOYPATH/
     - /bin/cp -R assets/. $DEPLOYPATH/assets/
