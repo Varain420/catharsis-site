@@ -57,11 +57,14 @@ if ($nume === '' || !preg_match('/^(\+40|0040|0)7\d{8}$/', $phDigits)) {
   exit;
 }
 
+try {
+
 // 3) Limita: maximum 5 cereri pe ora de la acelasi IP
 $dir = __DIR__ . '/../.booking-rate';
 if (!is_dir($dir)) { @mkdir($dir, 0700, true); }
+if (!is_dir($dir) || !is_writable($dir)) { $dir = sys_get_temp_dir(); }
 $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'necunoscut';
-$ipFile = $dir . '/' . md5($ip);
+$ipFile = $dir . '/cg-rate-' . md5($ip);
 $hits = array();
 if (is_file($ipFile)) {
   foreach (file($ipFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
@@ -99,7 +102,15 @@ $headers = 'From: Programari Catharsis <programari@catharsisgalati.ro>' . "\r\n"
          . 'Content-Transfer-Encoding: 8bit';
 
 $encSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
+if (!function_exists('mail')) { throw new Exception('functia mail() nu exista / e dezactivata'); }
 $ok = @mail($to, $encSubject, $body, $headers, '-fprogramari@catharsisgalati.ro');
 if (!$ok) { $ok = @mail($to, $encSubject, $body, $headers); }
 
 echo json_encode(array('ok' => (bool)$ok));
+
+} catch (Throwable $e) {
+  @error_log('[send-booking] ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
+  http_response_code(500);
+  $dbg = (isset($d['debug']) && $d['debug'] === 'cg2026');
+  echo json_encode(array('ok' => false, 'err' => 'server', 'msg' => $dbg ? ($e->getMessage() . ' @ linia ' . $e->getLine()) : null));
+}
