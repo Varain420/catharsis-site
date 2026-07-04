@@ -94,19 +94,69 @@ $body = 'Nume și prenume: ' . $nume . "\n"
       . 'Limba formularului: ' . ($en ? 'engleză' : 'română') . "\n\n"
       . '— trimis automat de pe catharsisgalati.ro (IP: ' . $ip . ', ' . date('d.m.Y H:i') . ")\n";
 
-$headers = 'From: Programari Catharsis <programari@catharsisgalati.ro>' . "\r\n"
-         . 'Reply-To: catharsis.galati@gmail.com' . "\r\n"
-         . 'Cc: catharsisgalati@yahoo.com' . "\r\n"
-         . 'MIME-Version: 1.0' . "\r\n"
-         . 'Content-Type: text/plain; charset=UTF-8' . "\r\n"
-         . 'Content-Transfer-Encoding: 8bit';
+// mail() e dezactivat pe acest server -> trimitem prin SMTP autentificat,
+// cu contul creat in cPanel. Datele de conectare stau in afara webroot-ului.
+$cfgFile = __DIR__ . '/../.booking-smtp.json';
+if (!is_file($cfgFile)) { throw new Exception('lipseste .booking-smtp.json (configurare SMTP)'); }
+$cfg = json_decode(file_get_contents($cfgFile), true);
+if (!is_array($cfg) || empty($cfg['user']) || empty($cfg['pass'])) { throw new Exception('.booking-smtp.json incomplet'); }
+$smtpHost = isset($cfg['host']) ? $cfg['host'] : 'localhost';
+$smtpPort = isset($cfg['port']) ? (int)$cfg['port'] : 465;
+$from = $cfg['user'];
+$rcpts = array($to, 'catharsisgalati@yahoo.com');
 
 $encSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
-if (!function_exists('mail')) { throw new Exception('functia mail() nu exista / e dezactivata'); }
-$ok = @mail($to, $encSubject, $body, $headers, '-fprogramari@catharsisgalati.ro');
-if (!$ok) { $ok = @mail($to, $encSubject, $body, $headers); }
+$msgHeaders = 'From: Programari Catharsis <' . $from . '>' . "\r\n"
+            . 'To: ' . $to . "\r\n"
+            . 'Cc: catharsisgalati@yahoo.com' . "\r\n"
+            . 'Reply-To: catharsis.galati@gmail.com' . "\r\n"
+            . 'Subject: ' . $encSubject . "\r\n"
+            . 'Date: ' . date('r') . "\r\n"
+            . 'MIME-Version: 1.0' . "\r\n"
+            . 'Content-Type: text/plain; charset=UTF-8' . "\r\n"
+            . 'Content-Transfer-Encoding: 8bit' . "\r\n";
 
-echo json_encode(array('ok' => (bool)$ok));
+$ctx = stream_context_create(array('ssl' => array(
+  'verify_peer' => false, 'verify_peer_name' => false, 'allow_self_signed' => true,
+)));
+$prefix = ($smtpPort === 465) ? 'ssl://' : '';
+$sock = @stream_socket_client($prefix . $smtpHost . ':' . $smtpPort, $errno, $errstr, 15, STREAM_CLIENT_CONNECT, $ctx);
+if (!$sock) { throw new Exception('conexiune SMTP esuata: ' . $errstr); }
+stream_set_timeout($sock, 15);
+
+$read = function () use ($sock) {
+  $resp = '';
+  while (($line = fgets($sock, 1024)) !== false) {
+    $resp .= $line;
+    if (strlen($line) < 4 || $line[3] !== '-') { break; }
+  }
+  return $resp;
+};
+$cmd = function ($c, $expect) use ($sock, $read) {
+  fwrite($sock, $c . "\r\n");
+  $r = $read();
+  if (strpos($r, (string)$expect) !== 0) { throw new Exception('SMTP "' . substr($c, 0, 12) . '..." a raspuns: ' . trim(substr($r, 0, 120))); }
+  return $r;
+};
+
+$greet = $read();
+if (strpos($greet, '220') !== 0) { throw new Exception('SMTP salut neasteptat: ' . trim(substr($greet, 0, 120))); }
+$cmd('EHLO catharsisgalati.ro', '250');
+if ($smtpPort === 587) { $cmd('STARTTLS', '220'); stream_socket_enable_crypto($sock, true, STREAM_CRYPTO_METHOD_TLS_CLIENT); $cmd('EHLO catharsisgalati.ro', '250'); }
+$cmd('AUTH LOGIN', '334');
+$cmd(base64_encode($cfg['user']), '334');
+$cmd(base64_encode($cfg['pass']), '235');
+$cmd('MAIL FROM:<' . $from . '>', '250');
+foreach ($rcpts as $r) { $cmd('RCPT TO:<' . $r . '>', '250'); }
+$cmd('DATA', '354');
+$data = $msgHeaders . "\r\n" . preg_replace('/^\./m', '..', str_replace("\n", "\r\n", $body));
+fwrite($sock, $data . "\r\n.\r\n");
+$fin = $read();
+fwrite($sock, "QUIT\r\n");
+fclose($sock);
+if (strpos($fin, '250') !== 0) { throw new Exception('SMTP nu a acceptat mesajul: ' . trim(substr($fin, 0, 120))); }
+
+echo '{"ok":true}';
 
 } catch (Throwable $e) {
   @error_log('[send-booking] ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
