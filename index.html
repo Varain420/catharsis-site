@@ -996,12 +996,12 @@
         <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
           <div style="display:flex;flex-direction:column;gap:18px">
             <div>
-              <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold,#c9a24b);margin-bottom:8px">{{ t.lblNume }}</div>
-              <input value="{{ fNume }}" onchange="{{ onNume }}" placeholder="{{ t.phNume }}" style="width:100%;padding:14px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(201,162,75,.3);border-radius:2px;color:#f0e5cc;font-size:15px;outline:none" style-focus="border-color:var(--gold,#c9a24b)">
+              <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold,#c9a24b);margin-bottom:8px">{{ t.lblNume }}<span style="color:#e6c67a"> *</span></div>
+              <input value="{{ fNume }}" onchange="{{ onNume }}" maxlength="80" placeholder="{{ t.phNume }}" style="width:100%;padding:14px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(201,162,75,.3);border-radius:2px;color:#f0e5cc;font-size:15px;outline:none" style-focus="border-color:var(--gold,#c9a24b)">
             </div>
             <div>
-              <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold,#c9a24b);margin-bottom:8px">{{ t.lblTel }}</div>
-              <input value="{{ fTelefon }}" onchange="{{ onTelefon }}" placeholder="07xx xxx xxx" style="width:100%;padding:14px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(201,162,75,.3);border-radius:2px;color:#f0e5cc;font-size:15px;outline:none" style-focus="border-color:var(--gold,#c9a24b)">
+              <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold,#c9a24b);margin-bottom:8px">{{ t.lblTel }}<span style="color:#e6c67a"> *</span></div>
+              <input value="{{ fTelefon }}" onchange="{{ onTelefon }}" maxlength="20" placeholder="07xx xxx xxx" style="width:100%;padding:14px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(201,162,75,.3);border-radius:2px;color:#f0e5cc;font-size:15px;outline:none" style-focus="border-color:var(--gold,#c9a24b)">
             </div>
             <div>
               <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold,#c9a24b);margin-bottom:8px">{{ t.lblServ }}</div>
@@ -1047,11 +1047,11 @@
             </div>
             <div>
               <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold,#c9a24b);margin-bottom:8px">{{ t.lblMesaj }}</div>
-              <textarea value="{{ fMesaj }}" onchange="{{ onMesaj }}" rows="4" placeholder="{{ t.phMesaj }}" style="width:100%;padding:14px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(201,162,75,.3);border-radius:2px;color:#f0e5cc;font-size:15px;outline:none;resize:vertical;line-height:1.6" style-focus="border-color:var(--gold,#c9a24b)"></textarea>
+              <textarea value="{{ fMesaj }}" onchange="{{ onMesaj }}" maxlength="1000" rows="4" placeholder="{{ t.phMesaj }}" style="width:100%;padding:14px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(201,162,75,.3);border-radius:2px;color:#f0e5cc;font-size:15px;outline:none;resize:vertical;line-height:1.6" style-focus="border-color:var(--gold,#c9a24b)"></textarea>
             </div>
             <div onclick="{{ toggleGdpr }}" style="display:flex;align-items:flex-start;gap:11px;cursor:pointer">
               <div style="{{ gdprBox }}">{{ gdprCheck }}</div>
-              <div style="font-size:12.5px;line-height:1.55;color:rgba(232,223,200,.66)">{{ t.gdpr }}</div>
+              <div style="font-size:12.5px;line-height:1.55;color:rgba(232,223,200,.66)">{{ t.gdpr }}<span style="color:var(--gold,#c9a24b)"> *</span></div>
             </div>
             <sc-if value="{{ hasErr }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:#e8a5a0;letter-spacing:.02em;padding:2px 0">{{ errMsg }}</div></sc-if>
             <div onclick="{{ submit }}" style="text-align:center;padding:16px;background:linear-gradient(180deg,#e6c67a,#c9a24b);color:#0a2118;font-weight:600;font-size:13px;letter-spacing:.16em;text-transform:uppercase;border-radius:2px;cursor:pointer;box-shadow:0 10px 30px rgba(201,162,75,.25)" style-hover="filter:brightness(1.07)">{{ t.submitBtn }}</div>
@@ -1148,9 +1148,7 @@
 
 <!-- ===================== FLOATING ACTIONS ===================== -->
 <a href="tel:+40743249796" title="{{ t.callTitle }}" aria-label="{{ t.callTitle }}" style="position:fixed;right:20px;bottom:84px;z-index:70;width:52px;height:52px;border-radius:50%;background:linear-gradient(180deg,#e6c67a,#c9a24b);box-shadow:0 8px 22px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;text-decoration:none;color:#0a2118;font-size:22px" style-hover="filter:brightness(1.07)">✆</a>
-<a href="https://wa.me/40743249796" target="_blank" rel="noopener" title="{{ t.waTitle }}" aria-label="{{ t.waTitle }}" style="position:fixed;right:20px;bottom:20px;z-index:70;width:56px;height:56px;border-radius:50%;background:#1f9d55;box-shadow:0 8px 24px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;text-decoration:none;border:1.5px solid rgba(201,162,75,.55)" style-hover="filter:brightness(1.08)">
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M12 3.2c-4.9 0-8.9 3.6-8.9 8 0 1.6.5 3.1 1.5 4.4L3 21l5.6-1.5c1.1.5 2.3.8 3.4.8 4.9 0 8.9-3.6 8.9-8s-4-8.1-8.9-8.1zm0 14.6c-1.1 0-2.1-.3-3-.7l-.2-.1-2.6.7.7-2.5-.2-.3c-.6-.9-.9-1.9-.9-3 0-3.3 3.1-6 6.4-6s6.4 2.7 6.4 6-3.1 5.9-6.6 5.9z"></path></svg>
-</a>
+<a href="https://wa.me/40743249796" target="_blank" rel="noopener" title="{{ t.waTitle }}" aria-label="{{ t.waTitle }}" style="position:fixed;right:20px;bottom:20px;z-index:70;width:52px;height:52px;border-radius:50%;background:linear-gradient(180deg,#e6c67a,#c9a24b);box-shadow:0 8px 22px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;text-decoration:none" style-hover="filter:brightness(1.07)"><svg width="26" height="26" viewBox="0 0 448 512" fill="#0a2118"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg></a>
 
 <!-- ===================== FOOTER ===================== -->
 <footer style="background:#081b13;border-top:1px solid rgba(201,162,75,.22);padding:clamp(48px,6vw,72px) 22px 30px">
@@ -1330,7 +1328,7 @@ class Component extends DCLogic {
   }
 
   go(p) {
-    this.setState({ page: p, articleIdx: null });
+    this.setState(p === 'booking' ? { page: p, articleIdx: null, sent: false, err: '' } : { page: p, articleIdx: null });
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' });
   }
   setField(k, v) { this.setState(s => ({ form: { ...s.form, [k]: v } })); }
@@ -1368,7 +1366,7 @@ class Component extends DCLogic {
         bookEyebrow: 'Programări', bookTitle: 'Fă o programare', bookSub: 'Completează formularul și te contactăm în cel mai scurt timp. Totul rămâne strict confidențial.',
         lblNume: 'Nume și prenume', phNume: 'Numele tău', lblTel: 'Telefon', lblServ: 'Serviciu dorit', servPlaceholder: 'Alege un serviciu…', lblMedic: 'Medic / psiholog preferat', medicNone: 'Fără preferință', lblZi: 'Zi preferată', lblInterval: 'Interval orar', intervalAny: 'Oricând', lblMesaj: 'Mesaj (opțional)', phMesaj: 'Spune-ne pe scurt cu ce te putem ajuta', submitBtn: 'Trimite solicitarea', consent: 'Prin trimiterea formularului ești de acord să fii contactat(ă) pentru stabilirea programării.', thanksTitle: 'Îți mulțumim!', thanksText: 'Aproape gata — mai e un singur pas.', thanksSend: 'Trimite-ne detaliile printr-un singur click:', sendGmail: 'Trimite prin Gmail', sendEmail: 'Aplicația de email', addCalendar: 'Adaugă în Google Calendar', sendAnother: 'Completează din nou', contactData: 'Date de contact', programLbl: 'Program',
         contactEyebrow: 'Contact', contactTitle: 'Ne găsești aici', contactSub: 'VOX Center, în inima Galațiului. Te așteptăm într-un cadru discret și primitor.', programTitle: 'Program de lucru', bookOnline: 'Programează online',
-        modalFormare: 'Formare', modalExpertiza: 'Arii de expertiză', modalBookWith: 'Programează cu', gdpr: 'Sunt de acord cu prelucrarea datelor mele conform Politicii de confidențialitate.', crisis: 'Ești în criză? Sună la 112 sau la TelVerde 0800 801 200 (gratuit, 24/7).', errRequired: 'Completează numele și telefonul.', errPhone: 'Introdu un număr de telefon valid.', errGdpr: 'Bifează acordul de confidențialitate.',
+        modalFormare: 'Formare', modalExpertiza: 'Arii de expertiză', modalBookWith: 'Programează cu', gdpr: 'Sunt de acord cu prelucrarea datelor mele conform Politicii de confidențialitate.', crisis: 'Ești în criză? Sună la 112 sau la TelVerde 0800 801 200 (gratuit, 24/7).', errRequired: 'Completează numele și telefonul.', errPhone: 'Introdu un număr de telefon mobil valid (ex.: 07xx xxx xxx).', errGdpr: 'Bifează acordul de confidențialitate.',
         callTitle: 'Sună acum', waTitle: 'Scrie-ne pe WhatsApp',
         footerDesc: 'Clinică de psihiatrie și psihologie din Galați. Eliberare emoțională, echilibru și vindecare, cu discreție și profesionalism.', footerNav: 'Navigare', footerContact: 'Contact', copyright: '© 2026 Clinica Catharsis Galați · Toate drepturile rezervate',
       },
@@ -1472,7 +1470,7 @@ class Component extends DCLogic {
         bookEyebrow: 'Appointments', bookTitle: 'Make an appointment', bookSub: 'Fill in the form and we will contact you as soon as possible. Everything remains strictly confidential.',
         lblNume: 'Full name', phNume: 'Your name', lblTel: 'Phone', lblServ: 'Desired service', servPlaceholder: 'Choose a service…', lblMedic: 'Preferred doctor / psychologist', medicNone: 'No preference', lblZi: 'Preferred day', lblInterval: 'Time slot', intervalAny: 'Anytime', lblMesaj: 'Message (optional)', phMesaj: 'Tell us briefly how we can help', submitBtn: 'Send request', consent: 'By submitting this form you agree to be contacted to arrange the appointment.', thanksTitle: 'Thank you!', thanksText: 'Almost done — just one more step.', thanksSend: 'Send us the details with a single click:', sendGmail: 'Send via Gmail', sendEmail: 'Email app', addCalendar: 'Add to Google Calendar', sendAnother: 'Fill in again', contactData: 'Contact details', programLbl: 'Hours',
         contactEyebrow: 'Contact', contactTitle: 'Find us here', contactSub: 'VOX Center, in the heart of Galați. We welcome you in a discreet and warm setting.', programTitle: 'Working hours', bookOnline: 'Book online',
-        modalFormare: 'Training', modalExpertiza: 'Areas of expertise', modalBookWith: 'Book with', gdpr: 'I agree to the processing of my data in line with the Privacy Policy.', crisis: 'In crisis? Call 112 or the free TelVerde helpline 0800 801 200 (24/7).', errRequired: 'Please fill in your name and phone.', errPhone: 'Please enter a valid phone number.', errGdpr: 'Please accept the privacy terms.',
+        modalFormare: 'Training', modalExpertiza: 'Areas of expertise', modalBookWith: 'Book with', gdpr: 'I agree to the processing of my data in line with the Privacy Policy.', crisis: 'In crisis? Call 112 or the free TelVerde helpline 0800 801 200 (24/7).', errRequired: 'Please fill in your name and phone.', errPhone: 'Please enter a valid mobile number (e.g. 07xx xxx xxx).', errGdpr: 'Please accept the privacy terms.',
         callTitle: 'Call now', waTitle: 'Message us on WhatsApp',
         footerDesc: 'Psychiatry and psychology clinic in Galați. Emotional release, balance and healing, with discretion and professionalism.', footerNav: 'Navigation', footerContact: 'Contact', copyright: '© 2026 Catharsis Clinic Galați · All rights reserved',
       },
@@ -1569,11 +1567,11 @@ class Component extends DCLogic {
       onClick: () => this.setState(s => ({ faqOpen: s.faqOpen === i ? -1 : i })),
     }));
 
-    const articles = c.articles.map((a, i) => ({ ...a, open: () => this.setState({ articleIdx: i }) }));
+    const articles = c.articles.map((a, i) => ({ ...a, open: () => { this.setState({ articleIdx: i }); if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' }); } }));
 
     // ---- Team filters ----
     const scrEn = this.state.lang === 'en';
-    const teamCat = (role) => { const r = (role || '').toLowerCase(); if (r.indexOf('coach') >= 0 || r.indexOf('sportiv') >= 0) return 'coaching'; if (r.indexOf('psiholog') >= 0 || r.indexOf('psihoterap') >= 0) return 'psihologie'; return 'psihiatrie'; };
+    const teamCat = (role) => { const r = (role || '').toLowerCase(); if (r.indexOf('coach') >= 0 || r.indexOf('sportiv') >= 0 || r.indexOf('sports') >= 0) return 'coaching'; if (r.indexOf('psiholog') >= 0 || r.indexOf('psihoterap') >= 0 || r.indexOf('psycholog') >= 0 || r.indexOf('psychotherap') >= 0) return 'psihologie'; return 'psihiatrie'; };
     const tf = this.state.teamFilter || 'all';
     const teamFiltered = tf === 'all' ? team : team.filter(m => teamCat(m.role) === tf);
     const pillStyle = (on) => 'padding:9px 18px;cursor:pointer;font-size:12px;letter-spacing:.08em;border-radius:40px;white-space:nowrap;transition:all .18s ease;border:1px solid ' + (on ? 'var(--gold,#c9a24b)' : 'rgba(201,162,75,.28)') + ';background:' + (on ? 'rgba(201,162,75,.16)' : 'transparent') + ';color:' + (on ? '#f6ecd2' : '#cdbf9f');
@@ -1607,7 +1605,7 @@ class Component extends DCLogic {
       { name: 'Psychiatric consultation', desc: 'A medical evaluation with a psychiatrist to clarify what you are going through and, if needed, a personalised treatment plan.' },
       { name: 'Psychotherapy', desc: 'Regular talking sessions with a psychotherapist to work through anxiety, stress and emotional difficulties at your own pace.' },
       { name: 'Psychological assessment', desc: 'Structured testing and a clinical interview that give you a clear picture and a documented diagnosis.' },
-      { name: 'Sports / mental coaching', desc: 'Mental preparation sessions that build focus, confidence and resilience under pressure.' }
+      { name: 'Sports mental coaching', desc: 'Mental preparation sessions that build focus, confidence and resilience under pressure.' }
     ] : [
       { name: 'Consultație psihiatrică', desc: 'O evaluare medicală cu un medic psihiatru care clarifică ceea ce trăiești și, dacă e nevoie, un plan de tratament personalizat.' },
       { name: 'Psihoterapie', desc: 'Ședințe regulate de discuție cu un psihoterapeut, pentru a lucra cu anxietatea, stresul și dificultățile emoționale în ritmul tău.' },
@@ -1710,7 +1708,7 @@ class Component extends DCLogic {
       amBook: () => { const m = team[this.state.memberIdx]; this.setState(s => ({ form: { ...s.form, medic: m ? m.name : '' }, memberIdx: null })); this.go('booking'); },
       articles, activeArticle,
       blogList: articleIdx == null, blogDetail: articleIdx != null,
-      closeArticle: () => this.setState({ articleIdx: null }),
+      closeArticle: () => { this.setState({ articleIdx: null }); if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' }); },
       medicOptions: team.map(m => m.name),
       fNume: this.state.form.nume, fTelefon: this.state.form.telefon,
       fServiciu: this.state.form.serviciu, fMedic: this.state.form.medic,
@@ -1725,7 +1723,7 @@ class Component extends DCLogic {
       submit: () => {
         const fm = this.state.form;
         if (!fm.nume.trim() || !fm.telefon.trim()) { this.setState({ err: 'required' }); return; }
-        if (!/^[0-9 +().\-]{6,}$/.test(fm.telefon.trim())) { this.setState({ err: 'phone' }); return; }
+        const ph = fm.telefon.replace(/[^0-9+]/g, ''); if (!/^(\+40|0040|0)7\d{8}$/.test(ph)) { this.setState({ err: 'phone' }); return; }
         if (!this.state.gdpr) { this.setState({ err: 'gdpr' }); return; }
         var endpoint = 'https://formspree.io/f/YOUR_FORM_ID';
         if (endpoint.indexOf('YOUR_FORM_ID') === -1) {
@@ -1756,7 +1754,7 @@ class Component extends DCLogic {
       closeScreen: () => this.setState({ screenOpen: false }),
       resetScreen: () => this.setState({ screenDone: false, screenSel: [] }),
       seeRec: () => { if ((this.state.screenSel || []).length === 0) return; this.setState({ screenDone: true }); },
-      goBookingFromScreen: () => { this.setState({ screenOpen: false }); this.go('booking'); },
+      goBookingFromScreen: () => { this.setState(s => ({ screenOpen: false, form: { ...s.form, serviciu: screenRec.name } })); this.go('booking'); },
       screenConcerns, screenRec,
       seeRecStyle: 'display:block;text-align:center;padding:14px;background:linear-gradient(180deg,#e6c67a,#c9a24b);color:#0a2118;font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;border-radius:2px;opacity:' + (scSel.length ? '1' : '.5'),
       scrEyebrow: scrEn ? 'Quick guidance' : 'Orientare rapidă',
